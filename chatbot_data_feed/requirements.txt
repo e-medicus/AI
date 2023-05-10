@@ -1,5 +1,5 @@
 transformers
 gpt_index==0.4.24
-langchain==0.0.113
+langchain
 llama-index==0.4.28
 Flask
