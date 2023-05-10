@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f1f1f1;
+        }
+
+        .chatbox {
+            width: 600px;
+            height: 700px;
+            margin: 50px auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            overflow-y: scroll;
+        }
+
+        .chatbox p {
+            margin: 10px;
+            padding: 10px;
+            width: 500px;
+            border-radius: 10px;
+            max-width: 70%;
+        }
+
+        .user_msg {
+            background-color: #DCF8C6;
+            text-align: right;
+            margin-left: auto;
+        }
+
+        .bot_msg {
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            align-self: flex-start;
+        }
+
+        .inputbox {
+            display: flex;
+            margin: auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            width: 600px;
+        }
+
+        .inputbox input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+        }
+
+        .inputbox button {
+            padding: 10px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="chatbox" id="chatbox"></div>
+    <div class="inputbox">
+        <input type="text" id="user_input" placeholder="Type your message here...">
+        <button id="btn">Send</button>
+    </div>
+    <script>
+        var chatbox=document.getElementById('chatbox');
+        var user_input=document.getElementById('user_input');
+        var btn=document.getElementById('btn');
+
+        btn.addEventListener('click',function() {
+            var user_text=user_input.value;
+            if(user_text.trim()!=='') {
+                chatbox.innerHTML+='<p class="user_msg">'+user_text+'</p>';
+                user_input.value='';
+                fetch('/get?msg='+user_text)
+                    .then(response => response.text())
+                    .then(data => {
+                        chatbox.innerHTML+='<p class="bot_msg">'+data+'</p>';
+                        chatbox.scrollTop=chatbox.scrollHeight;
+                    });
+            }
+        });
+
+        user_input.addEventListener('keypress',function(event) {
+            var keycode=(event.keyCode? event.keyCode:event.which);
+            if(keycode=='13') {
+                var user_text=user_input.value;
+                if(user_text.trim()!=='') {
+                    chatbox.innerHTML+='<p class="user_msg">'+user_text+'</p>';
+                    user_input.value='';
+                    fetch('/get?msg='+user_text)
+                        .then(response => response.text())
+                        .then(data => {
+                            chatbox.innerHTML+='<p class="bot_msg">'+data+'</p>';
+                            chatbox.scrollTop=chatbox.scrollHeight;
+                        });
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
